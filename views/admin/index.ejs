@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimal-ui"/>
+  <title>挖牛管理系统</title>
+  <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.0/css/amazeui.min.css">
+  <link rel="stylesheet" href="/stylesheets/base.css">
+  <link rel="stylesheet" href="/stylesheets/admin/header-layout.css">
+  <link rel="stylesheet" href="/stylesheets/admin/home.css">
+  <link rel="stylesheet" href="/javascripts/simditor-2.3.6/styles/simditor.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/sweetalert/dist/sweetalert.css">
+</head>
+<body>
+<% include header-layout %>
+
+<div class="container am-container">
+  <div class="am-g">
+    <div class="am-u-sm-6">
+      <form class="am-form-inline" role="form">
+        <div class="am-input-group am-input-group-primary">
+          <span class="am-input-group-label">
+            <i class="am-icon-search"></i>
+          </span>
+          <input id="searchText" name="key" type="text" class="am-form-field search">
+          <span class="am-input-group-btn">
+            <button id="searchBtn" class="am-btn am-btn-primary" type="submit">搜索</button>
+          </span>
+        </div>
+      </form>
+
+    </div>
+    <div class="am-u-sm-2 am-u-sm-offset-4">
+      <a href="/admin/newjob" class="am-btn am-btn-primary">
+        <i class="am-icon-plus"></i>
+        添加新职位
+      </a>
+    </div>
+  </div>
+  <div id="content">
+    <table class="am-table am-table-hover">
+      <thead>
+      <tr>
+        <th></th>
+        <th>编号</th>
+        <th>职位</th>
+        <th class="am-text-center">行业</th>
+        <th class="am-text-center">预览</th>
+        <th class="am-text-center">修改</th>
+        <th class="am-text-center">查看候选人</th>
+        <th class="am-text-center">新增申请人数</th>
+        <th class="am-text-center">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% for(var i = 0, len = jobs.length;i < len;i++){ %>
+      <tr>
+        <td class="sort">
+          <i class="am-icon-sort-asc am-icon-sm sort-up"
+             data-id="<%= jobs[i]._id %>"></i>
+          <!--<i class="am-icon-sort-desc am-icon-sm sort-down"></i>-->
+        </td>
+        <td><%= jobs[i].id %></td>
+        <td><%= jobs[i].jobTitle %></td>
+        <td class="am-text-center"><%= jobs[i].industry.name %></td>
+        <td class="am-text-center">
+          <a href="/admin/lookjob/<%= jobs[i]._id %>">
+            <i class="am-icon-file-text"></i>
+          </a>
+        </td>
+        <td class="am-text-center">
+          <a href="/admin/editjob/<%= jobs[i]._id %>">
+            <i class="am-icon-edit"></i>
+          </a>
+        </td>
+        <td class="am-text-center">
+          <a href="/admin/applylist/<%= jobs[i]._id %>">
+            <%= jobs[i].applyList %> &nbsp;
+            <i class="am-icon-eye"></i>
+          </a>
+        </td>
+        <td class="am-text-center">
+          <%= jobs[i].newApplyList %>
+        </td>
+        <td class="am-text-center">
+          <a href="javascript:;" title="删除职位" class="delete" data-id="<%= jobs[i]._id %>">
+            <i class="am-icon-trash"></i>
+          </a>
+        </td>
+      </tr>
+      <% } %>
+      </tbody>
+    </table>
+    <ul class="am-pagination am-pagination-centered"
+        data-page-total="<%= pageData.totalPage %>"
+        data-page-current="<%= pageData.currentPage %>">
+    </ul>
+  </div>
+</div>
+</body>
+<script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.0/js/amazeui.min.js"></script>
+<script type="text/javascript" src="/javascripts/template.js"></script>
+<script type="text/javascript" src="/javascripts/amazeui-pagination/amazeui-pagination.min.js"></script>
+<script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+  $(function () {
+    $('#searchText').on('keypress', function (e) {
+      if (e.keyCode === 13) {
+        searchJob($(this).val());
+      }
+    });
+    $('.delete').on('click', function (e) {
+      console.log(e);
+      swal({
+        title: "确定删除该职位?",
+        text: "删除后不可恢复!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnConfirm: false
+      }, function () {
+        $.ajax({
+          method: 'delete',
+          url: '/admin/job',
+          data: {jobId: e.currentTarget.attributes['data-id'].value},
+          success: function (res) {
+            swal({
+              title: '删除成功!',
+              text: '',
+              type: 'success'
+            }, function () {
+              location.reload();
+            });
+          },
+          error: function (err) {
+            var responseText = JSON.parse(err.responseText);
+            swal(responseText.message, "", "error");
+          }
+        });
+      });
+
+    });
+    $('#searchBtn').on('click', function () {
+      searchJob($('#searchText').val());
+    });
+    function searchJob(keywords) {
+      if (keywords == '') {
+        location.reload();
+      } else {
+        $.ajax({
+          url: '/search',
+          method: 'post',
+          data: {
+            key: keywords
+          },
+          success: function (res) {
+            var html = template('jobTpl', {jobs: res});
+            $('#content').html(html);
+          }
+        });
+      }
+    }
+
+    $('.sort-up').on('click', function (e) {
+      $.ajax({
+        url: '/admin/job/top',
+        method: 'post',
+        data: {id: e.currentTarget.attributes['data-id'].value},
+        success: function (res) {
+          location.reload();
+        }
+      });
+    });
+    var pagination = new Pagination({
+      wrap: $('.am-pagination'),
+      count: Number($('.am-pagination').attr('data-page-total')),
+      current: Number($('.am-pagination').attr('data-page-current')),
+      prevText: '上一页',
+      nextText: '下一页',
+      callback: function (page) {
+        console.log(page);
+        console.log(location.search);
+        location.search = 'page=' + page;
+      }
+    });
+  });
+</script>
+<script id="jobTpl" type="text/html">
+  <table class="am-table am-table-hover">
+    <thead>
+    <tr>
+      <th></th>
+      <th>职位</th>
+      <th>行业</th>
+      <th>预览</th>
+      <th>修改</th>
+      <th>查看候选人</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each jobs as job index}}
+    <tr>
+      <td class="sort">
+        <i class="am-icon-sort-asc am-icon-sm sort-up"
+           data-id="{{ job._id }}"></i>
+        <!--<i class="am-icon-sort-desc am-icon-sm sort-down"></i>-->
+      </td>
+      <td>{{ job.jobTitle.name }}</td>
+      <td>{{ job.industry.name }}</td>
+      <td>
+        <a href="/admin/lookjob/{{ job._id }}">
+          <i class="am-icon-file-text"></i>
+        </a>
+      </td>
+      <td>
+        <a href="/admin/editjob/{{ job._id }}">
+          <i class="am-icon-edit"></i>
+        </a>
+      </td>
+      <td>
+        <a href="/admin/applylist/{{ job._id }}">
+          <i class="am-icon-eye"></i>
+        </a>
+      </td>
+    </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</script>
+</html>

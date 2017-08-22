@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+  <meta charset="UTF-8">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>挖牛速聘-职位速递</title>
+  <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.0/css/amazeui.min.css">
+  <link rel="stylesheet" href="/stylesheets/base.css">
+  <link rel="stylesheet" href="/stylesheets/header-footer-layout.css">
+  <link rel="stylesheet" href="/stylesheets/index.css">
+</head>
+<body>
+<div class="header">
+  <% include header-layout %>
+  <img class="header-background am-show-md-up" src="http://7xw3ob.com1.z0.glb.clouddn.com/header_background.png"
+       alt="背景" width="880px">
+  <div class="am-container am-show-sm-down am-text-center" style="padding-top: 20px">
+    <!--<a href="/"><img src="http://7xw3ob.com1.z0.glb.clouddn.com/logo2.png" alt="logo" class="logo"></a>-->
+    <h1 style="font-size: 30px;color: #fff;">挖一下</h1>
+  </div>
+  <div class="header-content am-show-md-up">
+    <i class="am-icon-search mr10"></i>
+    来牛坑找到你心仪的工作
+  </div>
+  <div class="am-g">
+    <div class="am-u-md-6 am-u-md-offset-3 am-u-sm-12">
+      <input id="searchInput" type="text" class="am-form-field am-round" placeholder="职位描述,前端工程师,地点,上海等"/>
+    </div>
+  </div>
+  <div class="am-g">
+    <div class="am-u-md-6 am-u-md-offset-3 am-u-sm-12">
+      <dl class="hot-search">
+        <dt>热门搜索:&nbsp;</dt>
+        <dd><a class="hot-search-item">Web前端</a></dd>
+        <dd><a class="hot-search-item">全栈</a></dd>
+        <dd><a class="hot-search-item">PHP</a></dd>
+        <dd><a class="hot-search-item">Java</a></dd>
+        <dd><a class="hot-search-item">Node.js</a></dd>
+        <dd><a class="hot-search-item">北京</a></dd>
+        <dd><a class="hot-search-item">上海</a></dd>
+        <dd><a class="hot-search-item">杭州</a></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+<div class="container am-container">
+  <div class="row am-show-md-up">
+    <div class="am-md-12">
+      <div class="container-header">
+        <img src="http://7xw3ob.com1.z0.glb.clouddn.com/hot2x.png" alt="hot">
+        <span class="am-text-middle">热气牛坑</span>
+      </div>
+    </div>
+  </div>
+  <!--<div class="row am-show-md-up">-->
+  <!--<div class="am-md-12">-->
+  <!--<ul class="container-sort am-cf">-->
+  <!--<li class="active">最新</li>-->
+  <!--<li>热门</li>-->
+  <!--</ul>-->
+  <!--</div>-->
+  <!--</div>-->
+  <div class="am-show-sm-down am-cf" style="position: relative;margin-bottom: 10px">
+    <div class="am-fl">
+      <img src="http://7xw3ob.com1.z0.glb.clouddn.com/hot2x.png" alt="hot" style="height: 20px;vertical-align: middle">
+      <span class="am-text-middle" style="font-size: 20px;font-weight: 600;color: #666">热气牛坑</span>
+    </div>
+    <!--<div class="am-fr am-text-center">-->
+    <!--<a class="am-badge am-round">最新</a>-->
+    <!--<a class="am-badge am-round">热门</a>-->
+    <!--</div>-->
+  </div>
+  <div id="content" class="content">
+    <% for(var i = 0, len = jobs.length;i < len;i++){ %>
+    <div class="content-item">
+      <div class="content-item-title">
+        <%= jobs[i].jobTitle %>
+        <% if(jobs[i].isNew){ %>
+        <a class="am-badge am-badge-warning" style="background-color: red">New</a>
+        <% } %>
+        <div class="am-show-md-up apply-job"
+             data-job-name="<%= jobs[i].jobTitle %>"
+             data-job-id="<%= jobs[i]._id %>"
+             data-am-modal="{target: '#applyPopup'}">
+          <span class="content-item-title-right">占坑</span>
+          <img class="content-item-title-apply" src="http://7xw3ob.com1.z0.glb.clouddn.com/zhankeng.jpg" alt="占坑">
+        </div>
+      </div>
+      <div class="content-item-tag">
+        <div>
+          <i class="am-icon-cny"></i><%= jobs[i].minSalary %>K - <%= jobs[i].maxSalary %>K
+          &nbsp;<i class="am-icon-graduation-cap"></i>&nbsp;<%= jobs[i].degree %>
+          &nbsp;<i class="am-icon-map-marker"></i>&nbsp;<%= jobs[i].city %>
+        </div>
+        <% if(jobs[i].attraction.length != 0){ %>
+        <div class="am-cf">
+          <span class="am-show-md-up am-fl">职位诱惑:&nbsp;</span>
+          <span class="am-show-md-up"><%= jobs[i].attraction.join(',') %></span>
+          <div class="am-show-sm-down">
+            <% for(var j = 0;j < jobs[i].attraction.length;j++){ %>
+            <i class="am-icon-tag"></i>&nbsp;<%= jobs[i].attraction[j] %>&nbsp;
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+        <div class="am-show-md-up">所属行业:&nbsp;<%= jobs[i].industry.name %> &nbsp;&nbsp;&nbsp;
+          <%= jobs[i].finance ? '融资阶段: ' + jobs[i].finance : '融资阶段: 未知' %>
+        </div>
+        <div class="am-show-sm-down">
+          所属行业:&nbsp;<%= jobs[i].industry.name %>
+        </div>
+        <div class="am-show-sm-down">
+          <%= jobs[i].finance ? '融资阶段: ' + jobs[i].finance : '融资阶段: 未知' %>
+        </div>
+      </div>
+      <div class="content-item-desc">
+        <%- jobs[i].description %>
+      </div>
+      <div class="mobile-apply am-text-center am-show-sm-down">
+        <button type="button"
+                class="am-btn am-btn-primary am-radius apply-job"
+                data-job-name="<%= jobs[i].jobTitle %>"
+                data-job-id="<%= jobs[i]._id %>"
+                data-am-modal="{target: '#applyPopup'}">
+          <img src="http://7xw3ob.com1.z0.glb.clouddn.com/keng2x.png" alt="">
+          <span class="am-text-middle">占坑</span>
+        </button>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  <div class="am-g am-margin-bottom-lg am-margin-top-lg">
+    <div class="am-u-md-12 am-text-center">
+      <button id="loadMore" class="am-btn am-btn-primary">加载更多</button>
+    </div>
+  </div>
+</div>
+<% include footer-layout %>
+<div class="am-popup" id="applyPopup">
+  <div class="am-popup-inner">
+    <div class="am-popup-hd">
+      <h4 class="am-popup-title">请完善信息</h4>
+      <span data-am-modal-close class="am-close">&times;</span>
+    </div>
+    <div class="am-popup-bd">
+      <div class="am-input-group">
+        <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+        <input id="applyName" type="text" class="am-form-field" placeholder="姓名">
+      </div>
+      <div class="am-input-group">
+        <span class="am-input-group-label"><i class="am-icon-mobile am-icon-fw"></i></span>
+        <input id="applyPhone" type="text" class="am-form-field" placeholder="手机">
+      </div>
+      <div class="am-input-group">
+        <span class="am-input-group-label"><i class="am-icon-map-marker am-icon-fw"></i></span>
+        <input id="applyCity" type="text" class="am-form-field" placeholder="所在城市">
+      </div>
+      <button id="applySubmit" class="am-btn am-btn-primary am-btn-block">确认</button>
+      <input id="applyJobId" style="visibility: hidden"/>
+    </div>
+  </div>
+</div>
+<div data-am-widget="gotop" class="am-gotop am-gotop-fixed">
+  <a href="#top" title="回到顶部">
+    <span class="am-gotop-title">回到顶部</span>
+    <i class="am-gotop-icon am-icon-chevron-up"></i>
+  </a>
+</div>
+</body>
+<script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/javascripts/template.js"></script>
+<script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.7.0/js/amazeui.min.js"></script>
+<script id="jobTpl" type="text/html">
+  {{each jobs as job index}}
+  <div class="content-item">
+    <div class="content-item-title">
+      {{ job.jobTitle }}
+      {{ if job.isNew }}
+      <a class="am-badge am-badge-warning" style="background-color: red">New</a>
+      {{/if}}
+      <div class="am-show-md-up apply-job"
+           data-job-name="{{ job.jobTitle }}"
+           data-job-id="{{ job.jobTitle._id }}"
+           data-am-modal="{target: '#applyPopup'}">
+        <span class="content-item-title-right">占坑</span>
+        <img class="content-item-title-apply" src="http://7xw3ob.com1.z0.glb.clouddn.com/zhankeng.jpg" alt="占坑">
+      </div>
+    </div>
+    <div class="content-item-tag">
+      <div>
+        <i class="am-icon-cny"></i>{{ job.minSalary }}K - {{ job.maxSalary }}K
+        &nbsp;<i class="am-icon-graduation-cap"></i>&nbsp;{{ job.degree }}
+        &nbsp;<i class="am-icon-map-marker"></i>&nbsp;{{ job.city }}
+      </div>
+      {{if job.attraction.length}}
+      <div>
+        <span class="am-show-md-up am-fl">职位诱惑:&nbsp;</span>
+        <span class="am-show-md-up">{{ job.attraction.join(',') }}</span>
+        <div class="am-show-sm-down">
+          {{each job.attraction as attractionValue attractionIndex}}
+          <i class="am-icon-tag"></i>&nbsp;{{ attractionValue }}&nbsp;
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+      <div class="am-show-md-up">所属行业:&nbsp;{{ job.industry.name }} &nbsp;&nbsp;&nbsp;
+        {{ job.finance ? '融资阶段: ' + job.finance : '融资阶段: 未知' }}
+      </div>
+      <div class="am-show-sm-down">
+        所属行业:&nbsp;{{ job.industry.name }}
+      </div>
+      <div class="am-show-sm-down">
+        {{ job.finance ? '融资阶段: ' + job.finance : '融资阶段: 未知' }}
+      </div>
+
+    </div>
+    <div class="content-item-desc">
+      {{# job.description }}
+    </div>
+    <div class="mobile-apply am-text-center am-show-sm-down">
+      <button type="button"
+              class="am-btn am-btn-primary am-radius apply-job"
+              data-job-name="{{ job.jobTitle }}"
+              data-job-id="{{ job._id }}"
+              data-am-modal="{target: '#applyPopup'}">
+        <img src="http://7xw3ob.com1.z0.glb.clouddn.com/keng2x.png" alt="">
+        <span class="am-text-middle">占坑</span>
+      </button>
+    </div>
+  </div>
+  {{/each}}
+</script>
+
+<script src="//assets.kf5.com/supportbox/main.js" id="kf5-provide-supportBox" kf5-domain="51waniu.kf5.com"></script>
+
+
+<script src=" http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+<script>
+  $(function () {
+    var pageNum = 1;
+    $('.apply-job').on('click', function (e) {
+      var attr = e.currentTarget.attributes;
+      $('#applyJobId').val(attr['data-job-id'].value);
+    });
+    var loading = false;
+    $('#loadMore').on('click', function (e) {   //加载更多
+      if (!loading) {
+        loading = true;
+        pageNum += 1;
+        $.ajax({
+          url: '/jobs/' + pageNum,
+          method: 'get',
+          success: function (res) { //返回值用res来接收
+            loading = false;
+            if (res.length) {
+              var html = template('jobTpl', {jobs: res});
+              $('#content').append(html);
+            } else {
+              $(e.currentTarget).text('没有更多了').addClass('am-disabled');
+            }
+          }
+        });
+      }
+    });
+
+    $('.hot-search-item').on('click', function (e) {
+      $('#searchInput').val($(this).text());     //val返回被选中元素的值
+      $('#searchInput').trigger("keypress");    //触发searchInput元素的keypress事件
+    });
+
+    $('#searchInput').on('keypress', function (e) {     //定义searchInput的keypress事件
+      if (e.keyCode === 13 || e.isTrigger) {
+        $.ajax({
+          url: '/search',
+          method: 'post',
+          data: {
+            key: $(this).val()
+          },
+          success: function (res) {
+            if (res.length) {
+              var html = template('jobTpl', {jobs: res}); //jobtpl渲染模板，转化为json格式，返回给客户端
+              $('#content').html(html);  //显示渲染模板
+            } else {
+              $('#content').html('<h4 style="text-align: center">暂无相关职位</h4>');
+            }
+          }
+        });
+      }
+    });
+
+    $('#applySubmit').on('click', function (e) {
+      var data = {
+        jobId: $('#applyJobId').val(),
+        name: $('#applyName').val(),
+        phone: $('#applyPhone').val(),
+        city: $('#applyCity').val()
+      };
+      if (data.jobId == '' || data.name == '' || data.phone == '' || data.city == '') {
+        return;
+      }
+      $.ajax({
+        url: '/applyjob',
+        method: 'post',
+        data: data,
+        success: function (res) {
+          $('#applyPopup').modal('close');
+        },
+        error: function (err) {
+          alert(JSON.parse(err.responseText).message);
+        }
+      });
+    });
+
+    //微信sdk
+    $.ajax({
+      url: "/wsjsdk",
+      method: 'POST',
+      data: {"url": '51waniu.com'},   //测试，上线记得修改
+      success: function (data) {
+        var result = data.result;
+
+
+        wx.config({
+          debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+          appId: result.appId, // 必填，公众号的唯一标识
+          timestamp: result.timestamp, // 必填，生成签名的时间戳
+          nonceStr: result.nonce_arr, // 必填，生成签名的随机串
+          signature: result.jsapi_ticket,// 必填，签名，见附录1
+          jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo',
+            'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+
+        var wxData = {
+          'imgUrl': '',
+          'link': window.location.href,
+          'title': "挖牛职位速递",
+          'desc': "看一眼又不会怀孕，快来看下吧",
+          'type': 'link'
+        };
+
+
+        wx.ready(function () {
+
+
+          wx.onMenuShareTimeline({
+            title: wxData.title,
+            link: wxData.link,
+            imgUrl: wxData.imgUrl,
+            success: function () {
+              TDAPP.onEvent("微信朋友圈分享成功");
+            },
+            cancel: function () {
+              TDAPP.onEvent("微信朋友圈分享取消");
+            }
+          });
+
+          wx.onMenuShareAppMessage({
+            title: wxData.title,
+            desc: wxData.desc,
+            link: wxData.link,
+            imgUrl: wxData.imgUrl,
+            type: wxData.type,
+            dataUrl: '',
+            success: function () {
+              TDAPP.onEvent("微信分享成功");
+            },
+            error: function () {
+              TDAPP.onEvent("微信分享取消");
+            }
+          });
+
+          wx.onMenuShareQQ({
+            title: wxData.title,
+            desc: wxData.desc,
+            link: wxData.link,
+            imgUrl: wxData.imgUrl,
+            success: function () {
+              TDAPP.onEvent("qq分享成功");
+            },
+            error: function () {
+              TDAPP.onEvent("qq分享取消");
+            }
+          });
+
+          wx.onMenuShareWeibo({
+            title: wxData.title,
+            desc: wxData.desc,
+            link: wxData.link,
+            imgUrl: wxData.imgUrl,
+            success: function () {
+            },
+            error: function () {
+            }
+          });
+
+        });
+
+      }
+    })
+
+
+  });
+</script>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimal-ui"/>
+  <title>发布职位 - 挖牛管理系统</title>
+  <link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.0/css/amazeui.min.css">
+  <link rel="stylesheet" href="/stylesheets/base.css">
+  <link rel="stylesheet" href="/stylesheets/admin/header-layout.css">
+  <link rel="stylesheet" href="/stylesheets/admin/job.css">
+</head>
+<body>
+<% include header-layout %>
+
+<div class="am-container newjob">
+  <section class="am-panel am-panel-default">
+    <header class="am-panel-hd newjob-header">
+      <img src="http://7xw3ob.com1.z0.glb.clouddn.com/newjob_table2x.png" class="">
+      <span>查看职位</span>
+    </header>
+    <div class="am-panel-bd">
+      <ul class="am-list am-list-static">
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>职位名称</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.jobTitle %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>职位类型</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.jobType.name %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>所属行业</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.industry.name %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>投融资阶段</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.finance %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>年薪范围</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.minSalary %> K - <%= job.maxSalary %> K
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>工作城市</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.city %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>学历要求</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.degree %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>职位诱惑</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%= job.attraction.join(',') %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+              <strong>职位描述</strong>
+            </div>
+            <div class="am-u-sm-10">
+              <%- job.description %>
+            </div>
+          </div>
+        </li>
+        <li class="">
+          <div class="am-g">
+            <div class="am-u-sm-2">
+            </div>
+            <div class="am-u-sm-10">
+              <a href="/admin/editjob/<%=job._id%>" type="button" class="am-btn am-btn-default save" style="color: #fff">
+                编辑
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>
+</body>
+</html>
